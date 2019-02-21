@@ -1,0 +1,41 @@
+[*] '/home/vagrant/pwn/CTF/hackme_inndy/pwn/toooomuch/toooomuch'
+    Arch:     i386-32-little
+    RELRO:    No RELRO
+    Stack:    No canary found
+    NX:       NX disabled
+    PIE:      No PIE (0x8048000)
+    RWX:      Has RWX segments
+
+0x413b4141 found at offset: 28
+
+system_got_plt = 0x080484c0
+
+* dbg 
+```
+b *0x080487d8
+c
+```
+
+* fake flag
+```
+Give me your passcode: 43210
+Guess a number from 0 to 100: 50
+More please
+Guess a number from 51 to 100: 75
+Toooomuch
+Guess a number from 51 to 74: 60
+More please
+Guess a number from 61 to 74: 67
+More please
+Guess a number from 68 to 74: 71
+Toooomuch
+Guess a number from 68 to 70: 69
+More please
+Guess a number from 70 to 70: 70
+You are right!
+/bin/cat: fake_flag: No such file or directory
+Bye~
+```
+
+
+nc hackme.inndy.tw 7702
