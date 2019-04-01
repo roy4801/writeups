@@ -1,0 +1,14 @@
+```
+$ file ./warm
+./warm: ELF 32-bit LSB pie executable ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux-armhf.so.3, for GNU/Linux 3.2.0, BuildID[sha1]=c549628c0b3841a5fd9a23f0faaf6b51eb858e94, stripped
+```
+
+```
+$ checksec ./warm
+[*] '/CTF/volgaCTF_2019_qualifier/pwn/warm/warm'
+    Arch:     arm-32-little
+    RELRO:    Full RELRO
+    Stack:    Canary found
+    NX:       NX enabled
+    PIE:      PIE enabled
+```
